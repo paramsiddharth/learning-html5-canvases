@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Canvases</title>
+	<style>
+		body {
+			margin: 0;
+		}
+
+		#canvas {
+			/* background-color: red; */
+			/* border: 1px solid black; */
+		}
+	</style>
+</head>
+<body>
+	<canvas id='canvas'></canvas>
+	<script>
+		/**
+		 * @type {HTMLCanvasElement}
+		 */
+		const canvas = document.getElementById('canvas');
+
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		const c = canvas.getContext('2d');
+
+		const {
+			innerHeight: height,
+			innerWidth: width
+		} = window;
+
+		const minVel = 2;
+		const maxVel = 20;
+
+		const getRandomColour = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+
+		var animationFrame;
+		
+		function Circle(
+			x,
+			y,
+			r,
+			v,
+			th,
+			cl
+		) {
+			this.x = x;
+			this.y = y;
+			this.r = r;
+			this.v = v;
+			this.th = th;
+			this.cl = cl;
+
+			if (this.r == null) this.r = 30;
+			if (this.x == null) this.x = this.r + Math.random() * (width - this.r);
+			if (this.y == null) this.y = this.r + Math.random() * (height - this.r);
+			if (this.v == null) this.v = minVel + Math.random() * (maxVel - minVel);
+			if (this.th == null) this.th = Math.random() * 2 * Math.PI;
+			if (this.cl == null) this.cl = getRandomColour();
+			this.dx = this.v * Math.cos(this.th) * Math.sign(Math.random() - 1);
+			this.dy = this.v * Math.sin(this.th) * Math.sign(Math.random() - 1);
+
+			this.draw = () => {
+				const {
+					innerHeight: height,
+					innerWidth: width
+				} = window;
+
+				c.beginPath();
+				c.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+				// c.strokeStyle = `rgb(123, 123, 86)`;
+				// c.stroke();
+				c.strokeStyle = 'black';
+				c.fillStyle = this.cl;
+				c.stroke();
+				c.fill();
+			}
+
+			this.update = () => {
+				const {
+					innerHeight: height,
+					innerWidth: width
+				} = window;
+
+				if (this.x >= width - this.r)
+					this.dx = this.dx > 0 ? this.dx * -1 : this.dx;
+				else if (this.x <= this.r)
+					this.dx = this.dx < 0 ? this.dx * -1 : this.dx;
+				
+				if (this.y >= height - this.r)
+					this.dy = this.dy > 0 ? this.dy * -1 : this.dy;
+				else if (this.y <= this.r)
+					this.dy = this.dy < 0 ? this.dy * -1 : this.dy;
+
+				this.x += this.dx;
+				this.y += this.dy;
+
+				this.draw();
+			};
+		}
+
+		var circles = [];
+
+		const circleCount = 1000;
+
+		for (let i = 0; i < circleCount; i++) {
+			circles.push(new Circle());
+		}
+
+		function animate() {
+			animationFrame = requestAnimationFrame(animate);
+			
+			const {
+				innerHeight: height,
+				innerWidth: width
+			} = window;
+			
+			canvas.width = width;
+			canvas.height = height;
+			
+			c.clearRect(0, 0, width, height);
+			circles.forEach(ci => ci.update());
+		}
+
+		animate();
+	</script>
+</body>
+</html>
