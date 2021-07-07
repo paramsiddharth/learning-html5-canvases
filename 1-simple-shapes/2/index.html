@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Canvases</title>
+	<style>
+		body {
+			margin: 0;
+		}
+
+		#canvas {
+			/* background-color: red; */
+			/* border: 1px solid black; */
+		}
+	</style>
+</head>
+<body>
+	<canvas id='canvas'></canvas>
+	<script>
+		/**
+		 * @type {HTMLCanvasElement}
+		 */
+		const canvas = document.getElementById('canvas');
+
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		const c = canvas.getContext('2d');
+		
+		// Rectangles
+		c.fillStyle = 'yellow';
+		c.fillRect(100, 100, 200, 250);
+		c.fillStyle = 'blue';
+		c.fillRect(301, 100, 200, 250);
+		c.fillStyle = 'green';
+		c.fillRect(502, 100, 200, 250);
+
+		// Line
+		c.beginPath();
+		c.moveTo(90, 90);
+		c.strokeStyle = 'rgba(255, 0, 0, 0.3)';
+		c.lineTo(310, 360);
+		c.lineTo(291, 360);
+		c.lineTo(511, 90);
+		c.lineTo(492, 90);
+		c.lineTo(712, 360);
+		c.stroke();
+
+		// Arcs and Circles
+		c.beginPath();
+		c.strokeStyle = 'rgba(0, 0, 0, 0.7)';
+		c.arc(200, 225, 30, 0, 2 * Math.PI);
+		c.stroke()
+
+		for (let i = 0; i < 1000; i++) {
+			const x = Math.random() * window.innerWidth;
+			const y = Math.random() * window.innerHeight;
+
+			const r = Math.random() * 256;
+			const g = Math.random() * 256;
+			const b = Math.random() * 256;
+			const a = 0.5 + Math.random() * 0.5;
+
+			c.beginPath();
+			c.strokeStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+			c.arc(x, y, 10, 0, 2 * Math.PI);
+			c.stroke();
+		}
+	</script>
+</body>
+</html>
